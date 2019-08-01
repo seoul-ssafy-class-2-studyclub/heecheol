@@ -1,8 +1,5 @@
-import sys
 from pprint import pprint
 import copy
-sys.stdin = open('input.txt', 'r')
-
 
 def rotation(board, N):
     rotated_board = copy.deepcopy(board)
