@@ -3,7 +3,6 @@
 N = int(input())
 
 for number in range(1, N + 1):
-    
     num = str(number)   # int to string
 
     clap_num = ('3', '6', '9')

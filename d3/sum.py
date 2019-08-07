@@ -1,3 +1,10 @@
+def sum(numbers):
+    total = 0
+    for number in numbers:
+        total += number
+    return total
+
+
 for T in range(10):
     N = int(input())
     matrix = []
