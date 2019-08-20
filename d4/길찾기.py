@@ -30,6 +30,8 @@ while stack[0] != 0:
 
     if visit[i] == True and arr1[i] != 0:
         visit[i] = False
+        stack[top+1] = arr1[i]
+        top += 1
         if arr2[i] != 0:
             stack[top+1] = arr2[i]
             top += 1
