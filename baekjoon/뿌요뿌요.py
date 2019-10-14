@@ -1,5 +1,4 @@
 import sys
-from pprint import pprint
 sys.stdin = open('input.txt', 'r')
 
 
@@ -19,7 +18,6 @@ adj_list = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 cnt = 0
 while True:
-    # pprint(board)
     erased = False
     board2 = [row[:] for row in board]
 
@@ -37,10 +35,10 @@ while True:
     if erased is True:
         cnt += 1
         for j in range(6):
-            for i1 in range(11):
-                if board[i1][j] != '.':
-                    for i2 in range(i1 + 1, 12):
-                        if board[i2][j] == '.':
+            for i1 in range(11, 0, -1):
+                if board[i1][j] == '.':
+                    for i2 in range(i1 -1, -1, -1):
+                        if board[i2][j] != '.':
                             board[i1][j], board[i2][j] = board[i2][j], board[i1][j]
                             break
     else:
