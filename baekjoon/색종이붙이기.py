@@ -1,45 +1,69 @@
-from pprint import pprint
 import sys
 sys.stdin = open('input.txt', 'r')
 
 
-def put(x, y):
+def check(ix, iy):
+    for size in range(1, 5):
+        for i in range(size):
+            for j in range(size):
+                if board[ix + i][iy + j] == '0':
+                    return size
+    return size + 1
 
-    for i in range(x, 10):
-        for j in range(10):
-            if board[i][j] == '1':
-                return
 
-def check_size(x, y):
-    flag = True
-    for size in range(1, 11):
-        for dx in range(size):
-            for dy in range(size):
-                nxt_x = x + dx
-                nxt_y = y + dy
-                if nxt_x < 10 and nxt_y < 10:
-                    if board[nxt_x][nxt_y] == '0':
-                        flag = False
-                        size -= 1
-                        break
-            if flag is False:
-                break
-        if flag is False:
-            break
+def cover(ix, iy, size):
+    for i in range(size):
+        for j in range(size):
+            board[ix + i][iy + j] = '0'
 
-    for dx in range(size):
-        for dy in range(size):
-            board[x + dx][y + dy] = '0'
-    return size
+
+def reveal(ix, iy, size):
+    for i in range(size):
+        for j in range(size):
+            board[ix + i][iy + j] = '1'
+
+
+def solution(row, cnt):
+    global possible
+    global min_paper
+
+    if cnt > min_paper:
+        return
+
+    else:
+        for i in range(row, 10):
+            for j in range(10):
+                if board[i][j] == '1':
+                    max_size = check(i, j)
+                    for p in range(max_size):
+                        if p == 0:
+                            amount[0] -= 1
+                            if amount[0] >= 0:
+                                board[i][j] = '0'
+                                solution(i, cnt + 1)
+                                board[i][j] = '1'
+                            else:
+                                amount[0] += 1
+                                continue
+                        else:
+                            amount[p] -= 1
+                            if amount[p] >= 0:
+                                cover(i, j, p)
+                                solution(i, cnt + 1)
+                                reveal(i, j, p)
+                            else:
+                                amount[p] += 1
+                el
+
+        if cnt <= min_paper:
+            min_paper = cnt
 
 
 board = [input().split() for _ in range(10)]
-sizes = []
-cnt = 0
+total = 0   # 필요한 색종이의 수
 
-for i in range(10):
-    for j in range(10):
-        if board[i][j] == '1':
-            sizes.append(check_size(i, j))
+min_paper = 25
+amount = [5] * 5
 
-print(sizes)
+solution(0, 0)
+print(min_paper)
