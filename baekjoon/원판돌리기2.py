@@ -13,14 +13,11 @@ def rotate(xx, dd, kk):
 
 
 def check_near(idx1, idx2, value):
-    global flag
-
     for adj in adj_list:
         nxt1 = idx1 + adj[0]
-        nxt2 = (idx2 + adj[1]) % M
+        nxt2 = (idx2 + adj[1] + M) % M
         if 0 <= nxt1 < N and board[nxt1][nxt2] == value:
-            flag = True
-            board[nxt1][nxt2] = 'x'
+            board[nxt1][nxt2] = 0
             check_near(nxt1, nxt2, value)
 
 
@@ -28,48 +25,48 @@ N, M, T = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(N)]
 
 adj_list = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+# pprint(board)
 
 for _ in range(T):
+    # print('-')
     x, d, k = map(int, input().split())
     rotate(x, d, k)
-
-    flag_move = False   # 하나라도 바꾸는지
+    # pprint(board)
+    flag_move = False
     for i in range(N):
         for j in range(M):
-            if board[i][j] != 'x':
+            if board[i][j] != 0:
                 temp = board[i][j]
-                board[i][j] = 'x'
-                flag = False
-                check_near(i, j, temp)
-                if flag is False:
-                    board[i][j] = temp
-                else:
-                    flag_move = True
-
+                for adj in adj_list:
+                    n1, n2 = i + adj[0], (j + adj[1]) % M
+                    if 0 <= n1 < N and board[n1][n2] == temp:
+                        board[i][j] = 0
+                        check_near(i, j, temp)
+                        flag_move = True
+                        break
+    # pprint(board)
     if flag_move is False:
-        avg = 0
-        cnt = 0
+        # print('*')
+        total = 0
+        cnt = M * N
         for i in range(N):
-            for j in range(M):
-                if board[i][j] != 'x':
-                    avg += board[i][j]
-                    cnt += 1
-        if cnt == 0:
-            break
+            total += sum(board[i])
+            cnt -= board[i].count(0)
+
+        if cnt <= 1:
+            continue
         else:
-            avg /= cnt
+            avg = total / cnt
             for i in range(N):
                 for j in range(M):
-                    if board[i][j] != 'x':
+                    if board[i][j]:
                         if board[i][j] > avg:
                             board[i][j] -= 1
                         elif board[i][j] < avg:
                             board[i][j] += 1
-# pprint(board)
+        # pprint(board)
 result = 0
 for i in range(N):
-    for j in range(M):
-        if board[i][j] != 'x':
-            result += board[i][j]
+    result += sum(board[i])
 
 print(result)
