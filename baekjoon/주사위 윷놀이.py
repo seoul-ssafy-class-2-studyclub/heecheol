@@ -23,8 +23,10 @@ def move(idx, score):
                     if nxt == 32:
                         move(idx + 1, score)
                     else:
-                        positions[nxt].append(0)
+                        positions[nxt].append(1)
                         move(idx + 1, score + scores[nxt])
+                        positions[nxt].pop()
+                    positions[i].append(1)
 
 
 positions = [[] for _ in range(33)]
@@ -68,6 +70,6 @@ moving = {
 scores = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 13, 16, 19, 22, 24, 28, 27, 26, 25, 30, 35, 0]
 
 dices = list(map(int, input().split()))
-
-
-
+max_score = 0
+move(0, 0)
+print(max_score)
