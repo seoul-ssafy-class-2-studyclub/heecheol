@@ -16,7 +16,11 @@ visit = [False] * V
 
 for _ in range(E):
     u, v, w = map(int, input().split())
-    board[u - 1][v - 1] = w
+    if v - 1 in board[u - 1]:
+        if board[u - 1][v - 1] > w:
+            board[u - 1][v - 1] = w
+    else:
+        board[u - 1][v - 1] = w
 
 queue = []
 heapq.heappush(queue, (0, start))
