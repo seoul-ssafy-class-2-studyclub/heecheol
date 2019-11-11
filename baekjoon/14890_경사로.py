@@ -3,115 +3,89 @@ sys.stdin = open('input.txt', 'r')
 
 N, L = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(N)]
-
 cnt = 0
 
 for row in board:
-    print(row)
-    i = 0
+    flat = 1
+    j = 0
     flag = True
-    step = [False] * N
-
-    while i < N - 1:
-        if row[i] == row[i + 1]:
-            i += 1
+    while j < N - 1:
+        if row[j] == row[j + 1]:
+            flat += 1
+            j += 1
             continue
-
-        elif abs(row[i] - row[i + 1]) > 1:
+        elif abs(row[j] - row[j + 1]) > 1:
             flag = False
             break
-
-        elif row[i] - row[i + 1] == 1:
-            if i + L < N:
-                arr = row[i + 1:i + L + 1]
-                if len(set(arr)) == 1:
-                    if i + L < N - 1 and row[i + L] - row[i + L + 1] == -1:
+        elif row[j] - row[j + 1] == 1:
+            if j + L < N:
+                for nj in range(j + 1, j + L):
+                    if row[nj] == row[nj + 1]:
+                        continue
+                    else:
                         flag = False
                         break
-                    else:
-                        for j in range(i + 1, i + L + 1):
-                            step[j] = True
-                        i += L
-                        continue
-                else:
-                    flag = False
-                    break
-            else:
-                flag = False
-                break
-
-        elif row[i] - row[i + 1] == -1:
-            if i == 0 and L == 1:
-                i += 1
-                continue
-
-            elif i - L >= 0:
-                if len(set(row[i - L:i])) == 1 and len(set(step[i - L:i])) == 1 and step[i - L] is False:
-                    i += 1
+                if flag is True:
+                    flat = 0
+                    j += L
                     continue
                 else:
-                    flag = False
                     break
             else:
                 flag = False
                 break
-    print(step)
+        else:
+            if flat >= L:
+                flat = 1
+                j += 1
+                continue
+            else:
+                flag = False
+                break
+
     if flag is True:
-        print(row, '*')
         cnt += 1
 
-board = list(zip(*board))
-
-for row in board:
-    i = 0
+board2 = list(map(list, zip(*board)))
+for row in board2:
+    flat = 1
+    j = 0
     flag = True
-    while i < N - 1:
-        if row[i] == row[i + 1]:
-            i += 1
+    while j < N - 1:
+        if row[j] == row[j + 1]:
+            flat += 1
+            j += 1
             continue
-
-        elif abs(row[i] - row[i + 1]) > 1:
+        elif abs(row[j] - row[j + 1]) > 1:
             flag = False
             break
-
-        elif row[i] - row[i + 1] == 1:
-            if i + L < N:
-                arr = row[i + 1:i + L + 1]
-                if len(set(arr)) == 1:
-                    i += L
-                    if i < N - 1 and row[i] - row[i + 1] == -1:
+        elif row[j] - row[j + 1] == 1:
+            if j + L < N:
+                for nj in range(j + 1, j + L):
+                    if row[nj] == row[nj + 1]:
+                        continue
+                    else:
                         flag = False
                         break
-                    else:
-                        continue
+                if flag is True:
+                    flat = 0
+                    j += L
+                    continue
                 else:
-                    flag = False
                     break
             else:
                 flag = False
                 break
-
-        elif row[i] - row[i + 1] == -1:
-            if i == 0 and L == 1:
-                i += 1
+        else:
+            if flat >= L:
+                flat = 1
+                j += 1
                 continue
-
-            elif i - L >= 0:
-                arr = row[i - L:i]
-                if len(set(arr)) == 1:
-                    i += 1
-                    continue
-                else:
-                    flag = False
-                    break
             else:
                 flag = False
                 break
 
     if flag is True:
-        # print(row)
         cnt += 1
 
 print(cnt)
-
-
