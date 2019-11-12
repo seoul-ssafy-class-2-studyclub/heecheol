@@ -15,39 +15,47 @@ for order in orders:
 
     for i in range(9):
         for j in range(N):
-            result[j][order[i]] = results[j][i]
+            result[j][i] = results[j][order[i]]
+
     s = 0
     points = 0
     for inning in range(N):
-        this_inning = result[inning][s:] + result[inning][:s]
-        play = ''.join(this_inning)
-        s = 0
+        this_inning = result[inning]
+        play = ''.join(result[inning][s:] + result[inning][:s])
 
         if dp.get(play) is None:
+            e = s
             outs = 0
-            p_str = ''
+            point = 0
+            three, two, one = 0, 0, 0
             while outs < 3:
-                if this_inning[s] == '0':
+                if this_inning[e] == '0':
                     outs += 1
-                elif this_inning[s] == '1':
-                    p_str += '1'
-                elif this_inning[s] == '2':
-                    p_str += '10'
-                elif this_inning[s] == '3':
-                    p_str += '100'
+                elif this_inning[e] == '1':
+                    point += three
+                    three, two, one = two, one, 1
+                elif this_inning[e] == '2':
+                    point += two + three
+                    three, two, one = one, 1, 0
+                elif this_inning[e] == '3':
+                    point += one + two + three
+                    three, two, one = 1, 0, 0
                 else:
-                    p_str += '1000'
-                if s == 8:
-                    s = 0
+                    point += one + two + three + 1
+                    three, two, one = 0, 0, 0
+                if e == 8:
+                    e = 0
                 else:
-                    s += 1
-            point = p_str[:-3].count('1')
-            dp[play] = (point, s)
+                    e += 1
+            dp[play] = (point, (e - s + 9) % 9)
+            s = e
         else:
-            point, s = dp[play]
+            point, e = dp[play]
+            s = (s + e) % 9
         points += point
 
     if points > max_point:
         max_point = points
+
 print(max_point)
-# print(dp)
+print(dp)
