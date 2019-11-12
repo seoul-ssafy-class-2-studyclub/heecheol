@@ -3,58 +3,49 @@ import sys
 sys.stdin = open('input.txt', 'r')
 
 
-def inning(idx):
-    global score
-    outs = 0
-    play = ''
-    while outs < 3:
-        if arr[idx] == '0':
-            outs += 1
-        else:
-            play += arr[idx]
+N = int(input())
+results = [input().split() for _ in range(N)]
+orders = list(itertools.permutations(list(range(1, 9)), 8))
 
-        idx = (idx + 1) % 9
-
-    if play not in dict_score:
-        string = ''
-        for i in range(len(play)):
-            if play[i] == '1':
-                string += '1'
-            elif play[i] == '2':
-                string += '10'
-            elif play[i] == '3':
-                string += '100'
-            else:
-                string += '1000'
-
-        dict_score[play] = string[:-3].count('1')
-        score += dict_score[play]
-
-    else:
-        score += dict_score[play]
-
-    return idx
-
-
-N = int(input())    # N 은 이닝 수
-hits = [list(input().split()) for _ in range(N)]
-
-orders = list(itertools.permutations(list(range(1, 9))))
-max_score = 0
-dict_score = {}
 for order in orders:
-    score = 0
-    first = 0
-    for n in range(N):
-        arr = []
-        for i in range(8):
-            arr.append(hits[n][order[i]])
-        arr.insert(3, hits[n][0])
-        # print(arr)
-        first = inning(first)
-    if max_score < score:
-        max_score = score
+    order = list(order)
+    order.insert(3, 0)
 
-print(max_score)
+    s = 0
+    points = 0
+    point_list = []
+    for inning in range(N):
+        this_inning = results[inning]
+        outs = 0
+        point = 0
+        three, two, one = 0, 0, 0
+        while outs < 3:
+            if this_inning[order[s]] == '0':
+                outs += 1
 
+            elif this_inning[order[s]] == '1':
+                point += three
+                three, two, one = two, one, 1
 
+            elif this_inning[order[s]] == '2':
+                point += two + three
+                three, two, one = one, 1, 0
+
+            elif this_inning[order[s]] == '3':
+                point += one + two + three
+                three, two, one = 1, 0, 0
+
+            else:
+                point += one + two + three + 1
+                three, two, one = 0, 0, 0
+
+            if s == 8:
+                s = 0
+            else:
+                s += 1
+
+        points += point
+
+    point_list.append(points)
+
+print(max(point_list))
