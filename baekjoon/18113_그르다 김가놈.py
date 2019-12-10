@@ -1,44 +1,37 @@
-import heapq
 import sys
 sys.stdin = open('input.txt', 'r')
 
 N, K, M = map(int, input().split())
-heap = []
+arr = [0] * N
 total = 0
 for i in range(N):
     origin = int(input())
     if origin <= K:
         continue
     elif origin < 2 * K:
-        heapq.heappush(heap, (-(origin - K), origin - K))
-        total += origin - K
+        arr[i] = origin - K
     else:
-        heapq.heappush(heap, (-(origin - 2 * K), origin - 2 * K))
-        total += origin - 2 * K
+        arr[i] = origin - 2 * K
 
-p_limit = min(total // M, heap[0][1])
-
-flag = False
-for p in range(p_limit, 0, -1):
-    kimbab = heap[:]
-    heapq.heapify(kimbab)
+arr.sort(reverse=True)
+p = 1
+while True:
     cnt = 0
-    while kimbab:
-        n = heapq.heappop(kimbab)[1] // p
+    flag = False
+    for i in range(N):
+        n = arr[i] // p
         if n == 0:
             break
-
-        else:
-            cnt += n
-
+        cnt += n
         if cnt >= M:
             flag = True
             break
-
-    if flag is True:
+    if flag is False:
         break
+    else:
+        p += 1
 
-if flag is True:
-    print(p)
-else:
+if flag is False and p == 1:
     print(-1)
+else:
+    print(p - 1)
