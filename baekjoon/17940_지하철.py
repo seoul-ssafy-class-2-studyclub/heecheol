@@ -9,30 +9,49 @@ for i in range(N):
     company[i] = int(input())
 
 board = [list(map(int, input().split())) for _ in range(N)]
+inf = float('inf')
+dp = [(inf, inf) for _ in range(N)]
+dp[0] = (0, 0)
 
-visit = [False] * N
-visit[0] = True
-transfer_min = 987654321
-min_time = 987654321
 queue = []
-heapq.heappush(queue, (0, 0, 0, visit[:]))
+heapq.heappush(queue, (0, 0, 0))
 
 while queue:
-    t_cnt, time, cur, vis = heapq.heappop(queue)
+    tr, time, cur = heapq.heappop(queue)
+    # print(cur)
+    # print(dp)
 
     if cur == M:
-        if min_time > time:
-            transfer_min = t_cnt
-            min_time = time
-            break
+        # print(dp[M])
+        break
 
-    for nxt in range(N):
-        if board[cur][nxt] > 0 and vis[nxt] is False:
-            n_vis = vis[:]
-            n_vis[nxt] = True
-            if company[cur] != company[nxt]:
-                heapq.heappush(queue, (t_cnt + 1, time + board[cur][nxt], nxt, n_vis))
+    for n in range(N):
+
+        if board[cur][n] == 0:
+            continue
+
+        if company[cur] != company[n]:
+            if dp[n][0] < tr + 1:
+                continue
+
+            n_time = time + board[cur][n]
+            if dp[n][0] == tr + 1 and dp[n][1] <= n_time:
+                continue
+
             else:
-                heapq.heappush(queue, (t_cnt, time + board[cur][nxt], nxt, n_vis))
+                dp[n] = (tr + 1, n_time)
+                heapq.heappush(queue, (tr + 1, n_time, n))
 
-print(transfer_min, min_time)
+        else:
+            if dp[n][0] < tr:
+                continue
+
+            n_time = time + board[cur][n]
+            if dp[n][0] == tr and dp[n][1] <= n_time:
+                continue
+
+            else:
+                dp[n] = (tr, n_time)
+                heapq.heappush(queue, (tr, n_time, n))
+
+print(tr, time)
