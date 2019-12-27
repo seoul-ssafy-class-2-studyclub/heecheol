@@ -13,7 +13,7 @@ for i in range(N):
         if board[i][j] == 'S':
             si, sj = i, j
 
-adj_list = [(-1, 0), (0, 1), (1, 0), (0, -1)]   # 위 0, 오 1, 아 2, 왼 3
+adj_list = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 nd = [[1, 3], [0, 2], [1, 3], [0, 2], [0, 1, 2, 3]]
 visit = [[False] * M for _ in range(N)]
 
