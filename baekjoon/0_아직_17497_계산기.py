@@ -11,6 +11,7 @@ while queue:
     num, vis = queue.popleft()
     if num == 0:
         break
+
     if 0 < num < N + 1 and dp[num] == 0:
         dp[num] = 1
         if num + 2 < N and dp[num + 2] == 0:
