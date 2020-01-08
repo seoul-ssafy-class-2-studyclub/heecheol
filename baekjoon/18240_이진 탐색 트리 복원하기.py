@@ -1,7 +1,3 @@
-import sys
-sys.stdin = open('input.txt', 'r')
-
-
 N = int(input())
 input_depth = list(map(int, input().split()))
 
@@ -17,22 +13,32 @@ for i in range(N - 1):
 
 if flag is False:
     print(-1)
+
 else:
-    numbers = list(range(1, N + 1))
+    numbers = list(range(N + 1))
+    next_number = list(range(1, N + 2))
+
     depth = end
     result = [[0] * counts[i] for i in range(depth + 1)]
-    num = 1
+
+    start = 1
     while depth >= 0:
-        idx = 0
-        for i in range(counts[depth]):
-            result[depth][i] = numbers.pop(idx)
-            idx += 1
+        idx = start
+        start = next_number[idx]
+
+        for i in range(counts[depth] - 1):
+            result[depth][i] = idx
+            nxt = next_number[idx]
+            n_nxt = next_number[nxt]
+            next_number[nxt] = next_number[n_nxt]
+            idx = n_nxt
+
+        result[depth][-1] = idx
         depth -= 1
 
-    answer = [str(result[0][0])] + ['0'] * (N - 1)
+    answer = [str(result[0][0])] + ['-'] * (N - 1)
 
     for i in range(N - 1):
-        str_num = str(result[input_depth[i]].pop(0))
-        answer[i + 1] = str_num
+        answer[i + 1] = str(result[input_depth[i]].pop(0))
 
     print(' '.join(answer))
