@@ -1,49 +1,15 @@
+from pprint import pprint
 import sys
 sys.stdin = open('input.txt', 'r')
 
 
-def solution(k, c, n):
-    global cnt
-
-    if k == N - 1:
-        cnt += 1
-        return
-
-    if c > 0:
-        if c == 2:
-            solution(k + 1, -1, n - 1)
-            return
-        if n + 1 <= 9:
-            solution(k + 1, c + 1, n + 1)
-            solution(k + 1, -1, n - 1)
-        else:
-            solution(k + 1, -1, n - 1)
-        return
-
-    elif c < 0:
-        if c == -2:
-            solution(k + 1, 1, n + 1)
-            return
-        if n - 1 >= 0:
-            solution(k + 1, 1, n + 1)
-            solution(k + 1, c - 1, n - 1)
-        else:
-            solution(k + 1, 1, n + 1)
-        return
-
-    else:
-        if 0 < n < 9:
-            solution(k + 1, 1, n + 1)
-            solution(k + 1, -1, n - 1)
-        elif n == 0:
-            solution(k + 1, 1, n + 1)
-        else:
-            solution(k + 1, -1, n - 1)
-        return
-
-
 N = int(input())
-cnt = 0
-for i in range(10):
-    solution(0, 0, i)
-print(cnt % 1000000007)
+nums = [[0] * 13 for _ in range(N + 3)]
+nums[0] = [1] * 10 + [0] * 3
+
+for i in range(1, N):
+    for j in range(10):
+        nums[i][j] = nums[i-1][j-1] + nums[i-1][j+1] - nums[i-3][j-3] - nums[i-3][j+3]
+
+pprint(nums)
+print(sum(nums[N - 1]) % 1000000007)
