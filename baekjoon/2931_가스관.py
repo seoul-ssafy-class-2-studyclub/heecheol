@@ -53,6 +53,8 @@ for d in range(4):
     adj = adj_list[d]
     nxt1, nxt2 = si + adj[0], sj + adj[1]
     if 0 <= nxt1 < N and 0 <= nxt2 < M:
+        if board[nxt1][nxt2] == '.':
+            continue
         if board[nxt1][nxt2] in adj_pipe[d]:
             idx1, idx2, D = nxt1, nxt2, d
             flag = True
@@ -60,13 +62,91 @@ for d in range(4):
 
 if flag is True:
     while True:
-        di, dj, d_next = pipes[D][board[idx1][idx2]]
-        nxt1, nxt2 = idx1 + di, idx2 + dj
-        if board[nxt1][nxt2] == '.':
+        di, dj, D = pipes[D][board[idx1][idx2]]
+        idx1 += di
+        idx2 += dj
+        if board[idx1][idx2] == '.':
             break
-        idx1, idx2 = nxt1, nxt2, pipes[d_next][board[nxt1][nxt2]][]
 
-    pass
+    # 빈칸 발견 이후
+    flag_z = False
+    for p in adj_pipe[D]:
+        board[idx1][idx2] = p
+        di, dj, nd = pipes[D][p]
+        nxt1, nxt2 = idx1 + di, idx2 + dj
+        if 0 <= nxt1 < N and 0 <= nxt2 < M:
+            if board[nxt1][nxt2] == '.':
+                continue
+            if board[nxt1][nxt2] in adj_pipe[nd]:
+                while True:
+                    di, dj, nd = pipes[nd][board[nxt1][nxt2]]
+                    nxt1 += di
+                    nxt2 += dj
+                    if board[nxt1][nxt2] == 'Z':
+                        print(idx1 + 1, idx2 + 1, p)
+                        flag_z = True
+                        break
+                    if board[nxt1][nxt2] not in adj_pipe[nd]:
+                        break
+                if flag_z is True:
+                    break
+    else:
+        board[idx1][idx2] = '.'
+        for p in adj_pipe[D]:
+            if p == '+':
+                continue
+            di, dj, nd = pipes[D][p]
+            nxt1, nxt2 = idx1 + di, idx2 + dj
+            if 0 <= nxt1 < N and 0 <= nxt2 < M:
+                if board[nxt1][nxt2] == 'Z':
+                    print(idx1 + 1, idx2 + 1, p)
+                    break
 
 else:
-    pass
+    flag_z = False
+    for d in range(4):
+        adj = adj_list[d]
+        idx1, idx2 = si + adj[0], sj + adj[1]
+        if 0 <= idx1 < N and 0 <= idx2 < M:
+            for p in adj_pipe[d]:
+                board[idx1][idx2] = p
+                di, dj, nd = pipes[d][p]
+                nxt1, nxt2 = idx1 + di, idx2 + dj
+                if 0 <= nxt1 < N and 0 <= nxt2 < M:
+                    if board[nxt1][nxt2] in adj_pipe[nd]:
+                        while True:
+                            di, dj, nd = pipes[nd][board[nxt1][nxt2]]
+                            nxt1 += di
+                            nxt2 += dj
+                            if board[nxt1][nxt2] == 'Z':
+                                print(idx1 + 1, idx2 + 1, p)
+                                flag_z = True
+                                break
+                            if board[nxt1][nxt2] not in adj_pipe[nd]:
+                                break
+                        if flag_z is True:
+                            break
+            else:
+                board[idx1][idx2] = '.'
+
+            if flag_z is True:
+                break
+    else:
+        for d in range(4):
+            adj = adj_list[d]
+            idx1, idx2 = si + adj[0], sj + adj[1]
+            if 0 <= idx1 < N and 0 <= idx2 < M:
+                if board[idx1][idx2] != '.':
+                    continue
+
+                for p in adj_pipe[d]:
+                    di, dj, nd = pipes[d][p]
+                    nxt1, nxt2 = idx1 + di, idx2 + dj
+                    if 0 <= nxt1 < N and 0 <= nxt2 < M:
+                        if board[nxt1][nxt2] == 'Z':
+                            print(idx1 + 1, idx2 + 1, p)
+                            flag_z = True
+                            break
+
+                if flag_z is True:
+                    break
